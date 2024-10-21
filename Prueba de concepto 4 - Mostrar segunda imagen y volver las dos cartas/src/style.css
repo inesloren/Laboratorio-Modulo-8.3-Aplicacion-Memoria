@@ -1,0 +1,31 @@
+html, body{
+  box-sizing: border-box;
+}
+
+.contenedor-cartas {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.carta {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #aee2ff;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.carta img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  opacity: 0; /* La imagen inicialmente está oculta */
+  transition: opacity 0.3s ease; /* Transición suave para la aparición de la imagen */
+}
