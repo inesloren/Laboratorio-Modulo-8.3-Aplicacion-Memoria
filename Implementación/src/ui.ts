@@ -63,77 +63,48 @@ export const handleClickCarta = (indice: number): void => {
     const imagen = document.getElementById(`img${indice}`);
   
     if (imagen && imagen instanceof HTMLImageElement) {
-      if (sePuedeVoltearLaCarta(tablero, indice)) {
-        voltearLaCarta(tablero, indice);
-  
-        // Mostrar imagen
-        imagen.src = tablero.cartas[indice].imagen;
-  
-        // Cambiar estado
-        if (tablero.estadoPartida === "CeroCartasLevantadas") {
-          // Volteamos la primera carta
-          tablero.indiceCartaVolteadaA = indice;
-          cambiarEstadoPartida(tablero);
-        } else if (tablero.estadoPartida === "UnaCartaLevantada") {
-          // Volteamos la segunda carta
-          tablero.indiceCartaVolteadaB = indice;
-          cambiarEstadoPartida(tablero);
-  
-          // Comprobar si son pareja
-          if (
-            tablero.indiceCartaVolteadaA !== undefined &&
-            tablero.indiceCartaVolteadaB !== undefined
-          ) {
-            if (
-              sonPareja(
-                tablero.indiceCartaVolteadaA,
-                tablero.indiceCartaVolteadaB,
-                tablero
-              )
-            ) {
-              // Si son pareja, las marcamos como encontradas
-              parejaEncontrada(
-                tablero,
-                tablero.indiceCartaVolteadaA,
-                tablero.indiceCartaVolteadaB
-              );
-  
-              // Reiniciar índices para permitir seguir jugando
-              tablero.indiceCartaVolteadaA = undefined;
-              tablero.indiceCartaVolteadaB = undefined;
-              cambiarEstadoPartida(tablero);
-            } else {
-              // Si no son pareja, las volteamos de nuevo después de 1 segundo
-              setTimeout(() => {
-                if (tablero.indiceCartaVolteadaA !== undefined &&
-                    tablero.indiceCartaVolteadaB !== undefined){
-                parejaNoEncontrada(
-                  tablero,
-                  tablero.indiceCartaVolteadaA,
-                  tablero.indiceCartaVolteadaB
-                );
-  
-                // Ocultar las imágenes (poner imagen vacía o reverso)
-                const cartaA = document.getElementById(
-                  `img${tablero.indiceCartaVolteadaA}`
-                ) as HTMLImageElement;
-                const cartaB = document.getElementById(
-                  `img${tablero.indiceCartaVolteadaB}`
-                ) as HTMLImageElement;
-  
-                // Aseguramos que las cartas vuelven a estar boca abajo (sin imagen)
-                cartaA.src = "";  // Ocultar la imagen de la carta A
-                cartaB.src = "";  // Ocultar la imagen de la carta B
-  
-                // Reiniciar los índices después de no encontrar pareja
-                tablero.indiceCartaVolteadaA = undefined;
-                tablero.indiceCartaVolteadaB = undefined;
+        if (sePuedeVoltearLaCarta(tablero, indice)) {
+            voltearLaCarta(tablero, indice);
+            imagen.src = tablero.cartas[indice].imagen;
+
+            if (tablero.estadoPartida === "CeroCartasLevantadas") {
+                tablero.indiceCartaVolteadaA = indice;
                 cambiarEstadoPartida(tablero);
+            } else if (tablero.estadoPartida === "UnaCartaLevantada") {
+                tablero.indiceCartaVolteadaB = indice;
+                cambiarEstadoPartida(tablero);
+
+                if (
+                    tablero.indiceCartaVolteadaA !== undefined &&
+                    tablero.indiceCartaVolteadaB !== undefined
+                ) {
+                    if (
+                        sonPareja(tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB, tablero)
+                    ) {
+                        parejaEncontrada(tablero, tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB);
+                        // Reiniciar índices a undefined
+                        tablero.indiceCartaVolteadaA = undefined;
+                        tablero.indiceCartaVolteadaB = undefined;
+                    } else {
+                        // Si no son pareja, ejecutar setTimeout
+                        setTimeout(() => {
+                            if (tablero.indiceCartaVolteadaA !== undefined && tablero.indiceCartaVolteadaB !== undefined) {
+                                parejaNoEncontrada(tablero, tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB);
+                                // Ocultar las imágenes
+                                const cartaA = document.getElementById(`img${tablero.indiceCartaVolteadaA}`) as HTMLImageElement;
+                                const cartaB = document.getElementById(`img${tablero.indiceCartaVolteadaB}`) as HTMLImageElement;
+                                cartaA.src = "";  // Ocultar carta A
+                                cartaB.src = "";  // Ocultar carta B
+
+                                // Reiniciar índices a undefined
+                                tablero.indiceCartaVolteadaA = undefined;
+                                tablero.indiceCartaVolteadaB = undefined;
+                                cambiarEstadoPartida(tablero);
+                            }
+                        }, 1000); // Esperar 1 segundo antes de voltear cartas de nuevo
+                    }
                 }
-              }, 1000);
             }
-          }
         }
-      }
     }
-  };  
+};

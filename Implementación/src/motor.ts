@@ -41,6 +41,7 @@ export const sonPareja = (indiceA: number, indiceB: number, tablero: Tablero): b
 export const parejaEncontrada = (tablero: Tablero, indiceA: number, indiceB: number) : void => {
     tablero.cartas[indiceA].encontrada = true;
     tablero.cartas[indiceB].encontrada = true;
+    tablero.estadoPartida = "CeroCartasLevantadas";
   };
 
   export const parejaNoEncontrada = (
@@ -53,6 +54,7 @@ export const parejaEncontrada = (tablero: Tablero, indiceA: number, indiceB: num
   
     tablero.cartas[indiceB].encontrada = false;
     tablero.cartas[indiceB].estaVuelta = false;
+    tablero.estadoPartida = "CeroCartasLevantadas";
   };
 
 export const esPartidaCompleta = (tablero: Tablero): boolean => {
