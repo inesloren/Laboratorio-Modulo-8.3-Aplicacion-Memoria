@@ -1,5 +1,5 @@
 import { tablero, Tablero } from "./modelo";
-import { cambiarEstadoPartida, iniciaPartida, parejaEncontrada, parejaNoEncontrada, sePuedeVoltearLaCarta, sonPareja, voltearLaCarta, } from "./motor";
+import { iniciaPartida, parejaEncontrada, parejaNoEncontrada, sePuedeVoltearLaCarta, sonPareja, voltearLaCarta, } from "./motor";
 
 
 const btnEmpezarPartida = document.getElementById("iniciar-partida");
@@ -13,6 +13,7 @@ if(btnEmpezarPartida && btnEmpezarPartida instanceof HTMLButtonElement) {
 export const iniciarPartidaVisible = () => {
     iniciaPartida (tablero);
     crearTablero(tablero);
+    mostrarIntentos(tablero);
 };
 
 let numeroCarta = 0;
@@ -59,52 +60,52 @@ export const crearTablero = (tablero: Tablero ) : void => {
     };
 };
 
+
 export const handleClickCarta = (indice: number): void => {
     const imagen = document.getElementById(`img${indice}`);
-  
+
+    if(tablero.cartas[indice].estaVuelta) {
+        window.alert('Esta carta ya está volteada, elige otra');
+    };
+
     if (imagen && imagen instanceof HTMLImageElement) {
         if (sePuedeVoltearLaCarta(tablero, indice)) {
             voltearLaCarta(tablero, indice);
+            mostrarIntentos(tablero);
             imagen.src = tablero.cartas[indice].imagen;
+            const indiceA = tablero.indiceCartaVolteadaA;
+            const indiceB = tablero.indiceCartaVolteadaB;
 
-            if (tablero.estadoPartida === "CeroCartasLevantadas") {
-                tablero.indiceCartaVolteadaA = indice;
-                cambiarEstadoPartida(tablero);
-            } else if (tablero.estadoPartida === "UnaCartaLevantada") {
-                tablero.indiceCartaVolteadaB = indice;
-                cambiarEstadoPartida(tablero);
-
-                if (
-                    tablero.indiceCartaVolteadaA !== undefined &&
-                    tablero.indiceCartaVolteadaB !== undefined
-                ) {
-                    if (
-                        sonPareja(tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB, tablero)
-                    ) {
-                        parejaEncontrada(tablero, tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB);
-                        // Reiniciar índices a undefined
-                        tablero.indiceCartaVolteadaA = undefined;
-                        tablero.indiceCartaVolteadaB = undefined;
+                if (indiceA !== undefined && indiceB !== undefined) {
+                    if (sonPareja(indiceA, indiceB, tablero)) {
+                        parejaEncontrada(tablero, indiceA, indiceB)
                     } else {
-                        // Si no son pareja, ejecutar setTimeout
-                        setTimeout(() => {
-                            if (tablero.indiceCartaVolteadaA !== undefined && tablero.indiceCartaVolteadaB !== undefined) {
-                                parejaNoEncontrada(tablero, tablero.indiceCartaVolteadaA, tablero.indiceCartaVolteadaB);
-                                // Ocultar las imágenes
-                                const cartaA = document.getElementById(`img${tablero.indiceCartaVolteadaA}`) as HTMLImageElement;
-                                const cartaB = document.getElementById(`img${tablero.indiceCartaVolteadaB}`) as HTMLImageElement;
-                                cartaA.src = "";  // Ocultar carta A
-                                cartaB.src = "";  // Ocultar carta B
-
-                                // Reiniciar índices a undefined
-                                tablero.indiceCartaVolteadaA = undefined;
-                                tablero.indiceCartaVolteadaB = undefined;
-                                cambiarEstadoPartida(tablero);
-                            }
-                        }, 1000); // Esperar 1 segundo antes de voltear cartas de nuevo
+                        parejaNoEncontrada(tablero, indiceA, indiceB);
+                        darleLaVueltaALaCarta(tablero);
                     }
                 }
             }
         }
-    }
+    };
+
+const darleLaVueltaALaCarta = (tablero: Tablero) => {
+    setTimeout(() => {
+        // Ocultar las imágenes
+        const cartaA = document.getElementById(`img${tablero.indiceCartaVolteadaA}`) as HTMLImageElement;
+        const cartaB = document.getElementById(`img${tablero.indiceCartaVolteadaB}`) as HTMLImageElement;
+        cartaA.src = "";  // Ocultar carta A
+        cartaB.src = "";  // Ocultar carta B
+        tablero.indiceCartaVolteadaA = undefined;
+        tablero.indiceCartaVolteadaB = undefined;
+    }, 800);
 };
+
+const mostrarIntentos = (tablero: Tablero) => {
+    const contador = document.getElementById(
+      "numero-intentos"
+    ) as HTMLParagraphElement;
+  
+    if (contador && contador instanceof HTMLParagraphElement) {
+      contador.innerHTML = `Número de intentos: ${tablero.intentos}`;
+    }
+  };

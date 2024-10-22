@@ -1,3 +1,7 @@
+body, html{
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .contenedor-partida{
   display: flex;
   flex-direction: column;
@@ -7,7 +11,7 @@
 }
 
 .contenedor-cartas {
-    width: 600px;
+    width: 660px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
@@ -22,9 +26,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: transform 0.4s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
     aspect-ratio: 1/1;
-  }
+    overflow: hidden;
+    transform-origin: center; 
+    position: relative;
+}
+
+.carta:hover {
+    transform: scale(1.1);
+    background-color: #86d2ff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.carta:active {
+  transform: scale(0.9);
+  background-color: #86d2ff;
+  transition: transform 0.2s ease;
+}
 
 .carta img {
     max-width: 100%;
@@ -39,5 +59,17 @@
   padding: 10px 20px;
   font-size: 20px;
   color: #fff;
+  font-weight: bold;
+}
+
+.intentos{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: -20px;
+}
+
+#numero-intentos{
+  font-size: 20px;
   font-weight: bold;
 }
