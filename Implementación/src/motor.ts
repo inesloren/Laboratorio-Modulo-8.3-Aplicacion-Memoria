@@ -1,6 +1,6 @@
 import { Carta, Tablero } from "./modelo";
 
-export const disminuirIntentos = (tablero: Tablero) => {  
+export const aumentarIntentos = (tablero: Tablero) => {  
     tablero.intentos++;
     console.log("intentos");
 
@@ -17,16 +17,13 @@ export const barajarCartas = (cartas: Carta[]): Carta[] => {
 
 //¿Se puede voltear la carta?
 export const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean => {
-  if (!tablero.cartas[indice].encontrada && !tablero.cartas[indice].estaVuelta && tablero.estadoPartida !== "DosCartasLevantadas") {
-    return true;
-  }
-  return false;
+ return !tablero.cartas[indice].encontrada && !tablero.cartas[indice].estaVuelta && tablero.estadoPartida !== "DosCartasLevantadas";
 };
 
 //Voltear carta
 export const voltearLaCarta = (tablero: Tablero, indice: number): void => {
   tablero.cartas[indice].estaVuelta = true;
-  disminuirIntentos(tablero);
+  aumentarIntentos(tablero);
 
   if (tablero.estadoPartida === "CeroCartasLevantadas") {
     tablero.indiceCartaVolteadaA = indice;
@@ -39,10 +36,7 @@ export const voltearLaCarta = (tablero: Tablero, indice: number): void => {
 
 //¿Son pareja?
 export const sonPareja = (indiceA: number, indiceB: number, tablero: Tablero): boolean => {
-  if (tablero.cartas[indiceA].idFoto === tablero.cartas[indiceB].idFoto) {
-    return true;
-  }
-  return false;
+  return tablero.cartas[indiceA].idFoto === tablero.cartas[indiceB].idFoto;
 };
 
 export const parejaEncontrada = (tablero: Tablero, indiceA: number, indiceB: number): void => {
