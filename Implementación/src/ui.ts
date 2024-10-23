@@ -71,7 +71,6 @@ export const handleClickCarta = (indice: number): void => {
     if (imagen && imagen instanceof HTMLImageElement) {
         if (sePuedeVoltearLaCarta(tablero, indice)) {
             voltearLaCarta(tablero, indice);
-            mostrarIntentos(tablero);
             imagen.src = tablero.cartas[indice].imagen;
             const indiceA = tablero.indiceCartaVolteadaA;
             const indiceB = tablero.indiceCartaVolteadaB;
@@ -79,16 +78,18 @@ export const handleClickCarta = (indice: number): void => {
                 if (indiceA !== undefined && indiceB !== undefined) {
                     if (sonPareja(indiceA, indiceB, tablero)) {
                         parejaEncontrada(tablero, indiceA, indiceB)
+                        mostrarIntentos(tablero);
                     } else {
                         parejaNoEncontrada(tablero, indiceA, indiceB);
-                        darleLaVueltaALaCarta(tablero);
+                        darleLaVueltaALasCartas(tablero);
+                        mostrarIntentos(tablero);
                     }
                 }
             }
         }
     };
 
-const darleLaVueltaALaCarta = (tablero: Tablero) => {
+const darleLaVueltaALasCartas = (tablero: Tablero) => {
     setTimeout(() => {
         // Ocultar las imágenes
         const cartaA = document.getElementById(`img${tablero.indiceCartaVolteadaA}`) as HTMLImageElement;
@@ -97,7 +98,7 @@ const darleLaVueltaALaCarta = (tablero: Tablero) => {
         cartaB.src = "";  // Ocultar carta B
         tablero.indiceCartaVolteadaA = undefined;
         tablero.indiceCartaVolteadaB = undefined;
-    }, 800);
+    }, 500);
 };
 
 const mostrarIntentos = (tablero: Tablero) => {

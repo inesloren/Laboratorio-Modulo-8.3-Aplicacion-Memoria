@@ -2,15 +2,13 @@ import { Carta, Tablero } from "./modelo";
 
 export const aumentarIntentos = (tablero: Tablero) => {  
     tablero.intentos++;
-    console.log("intentos");
-
 };
 
 //Barajar cartas
 export const barajarCartas = (cartas: Carta[]): Carta[] => {
   for (let i = cartas.length - 1; i >= 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [cartas[i], cartas[j]] = [cartas[j], cartas[i]];
+    [{...cartas[i]}, {...cartas[j]}] = [cartas[j], cartas[i]];
   }
   return cartas;
 };
@@ -23,7 +21,6 @@ export const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean
 //Voltear carta
 export const voltearLaCarta = (tablero: Tablero, indice: number): void => {
   tablero.cartas[indice].estaVuelta = true;
-  aumentarIntentos(tablero);
 
   if (tablero.estadoPartida === "CeroCartasLevantadas") {
     tablero.indiceCartaVolteadaA = indice;
@@ -45,6 +42,7 @@ export const parejaEncontrada = (tablero: Tablero, indiceA: number, indiceB: num
   tablero.estadoPartida = "CeroCartasLevantadas";
   tablero.indiceCartaVolteadaA = undefined;
   tablero.indiceCartaVolteadaB = undefined;
+  aumentarIntentos(tablero);
 };
 
 export const parejaNoEncontrada = (tablero: Tablero, indiceA: number, indiceB: number): void => {
@@ -54,6 +52,7 @@ export const parejaNoEncontrada = (tablero: Tablero, indiceA: number, indiceB: n
   tablero.cartas[indiceB].encontrada = false;
   tablero.cartas[indiceB].estaVuelta = false;
   tablero.estadoPartida = "CeroCartasLevantadas";
+  aumentarIntentos(tablero);
 };
 
 export const esPartidaCompleta = (tablero: Tablero): boolean => {

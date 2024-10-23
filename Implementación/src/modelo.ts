@@ -45,12 +45,11 @@ const crearCartaInicial = (idFoto: number, imagen: string): Carta => ({
 });
 
 const crearColeccionDeCartasInicial = (infoCartas: InfoCarta[]): Carta[] => {
-  const coleccionCartas: Carta[] = [];
-  infoCartas.forEach((carta) => {
-    coleccionCartas.push(crearCartaInicial(carta.idFoto, carta.imagen));
-    coleccionCartas.push(crearCartaInicial(carta.idFoto, carta.imagen));
-  });
-  return coleccionCartas;
+  const cartasTransformadas = infoCartas.map((carta) =>
+    crearCartaInicial(carta.idFoto, carta.imagen)
+  );
+
+  return [...cartasTransformadas, ...cartasTransformadas];
 };
 
 export let cartas: Carta[] = crearColeccionDeCartasInicial(infoCartas);
